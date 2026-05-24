@@ -49,4 +49,9 @@ public class PhysicsEngine : MonoBehaviour
         impulseIntensity = intensity;
         foreach(Particle p in particles) p.SetImpulseInstensity(intensity);
     }
+
+
+    public void SetAquaMode(bool mode){
+        aquaMode = mode;
+    }
 }
