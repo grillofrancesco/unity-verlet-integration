@@ -4,11 +4,20 @@ public class PhysicsEngine : MonoBehaviour
 {
 
     // constant gravity acceleration
-    Vector3 G = new Vector3(0, -9.8f,0); 
+    public Vector3 G = new Vector3(0, -9.8f,0); 
     
     public Particle[] particles;
     public Stick[] sticks;
     public Spring[] springs;
+
+    public float friction = 0.7f;
+
+    [Header("Boundaries")]
+    public Vector3 boundary = new Vector3(20,20,10);
+
+    public bool aquaMode = false;
+
+    public float impulseIntensity = 1;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start(){
@@ -34,5 +43,10 @@ public class PhysicsEngine : MonoBehaviour
         foreach(Stick s in sticks){ s.enforceConstraints(); }
 
         foreach(Particle p in particles){ p.toUnity(); }
+    }
+
+    public void UpdateImpulseIntensity(float intensity){
+        impulseIntensity = intensity;
+        foreach(Particle p in particles) p.SetImpulseInstensity(intensity);
     }
 }

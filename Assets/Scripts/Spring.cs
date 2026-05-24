@@ -31,5 +31,6 @@ public class Spring : MonoBehaviour
         transform.localScale = new Vector3 (thickness, vectDiff.magnitude / 2, thickness);
 
         transform.rotation = Quaternion.FromToRotation(Vector3.up, vectDiff.normalized);
+        
     }
 }
