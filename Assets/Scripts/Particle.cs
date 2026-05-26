@@ -27,13 +27,6 @@ public class Particle : MonoBehaviour
         p_now.y = Mathf.Clamp(p_now.y,      (physicsEngine.aquaMode ? -yLimit : 0),      boundary.y);
         p_now.x = Mathf.Clamp(p_now.x, -boundary.x, +boundary.x);
         p_now.z = Mathf.Clamp(p_now.z, -boundary.z, +boundary.z);
-
-        // first implementation
-        if (physicsEngine.aquaMode){
-            if (p_now.y < 0){
-                addForce(-physicsEngine.G * mass + Vector3.up * mass); // should multiply for submerged volume
-            }
-        }
     }
 
     public void addForce(Vector3 newForce){

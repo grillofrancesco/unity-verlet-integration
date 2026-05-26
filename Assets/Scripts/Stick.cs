@@ -2,12 +2,22 @@ using UnityEngine;
 
 public class Stick : MonoBehaviour
 {
-    public float length = 1f;
+    PhysicsEngine physicsEngine;
+    public float length;
     public Particle pA, pB;
 
+    public float density = 7.87f;
+
     public float thickness = 0.4f;
+    float volume;
 
     public void enforceConstraints(){
+        equidistanceConstraint();
+
+        if (physicsEngine.aquaMode) buoyancyConstraint();
+    }
+
+    private void equidistanceConstraint(){
         // equidistant constraint
         Vector3 d_ab = (pB.p_now - pA.p_now);
 
@@ -15,8 +25,8 @@ public class Stick : MonoBehaviour
 
         // Vector3 displacementOfA = (d_ab * (distance - length)) / (distance * 2); with no masses
 
-        // now with masses
-        float totMass = pA.mass + pB.mass;
+        // float stickMass = volume * density; ?
+        float totMass = pA.mass + pB.mass; // + stickMass;
 
         Vector3 displacementOfA =  d_ab.normalized * (+distance * pB.mass / totMass);
         Vector3 displacementOfB =  d_ab.normalized * (-distance * pA.mass / totMass);
@@ -25,9 +35,30 @@ public class Stick : MonoBehaviour
         pB.p_now += displacementOfB;
     }
 
+    private void buoyancyConstraint(){
+        Particle min = (pA.p_now.y < pb.p_now.y) ? pA : pB;
+        Particle max = (pA.p_now.y < pb.p_now.y) ? pB : pA;
+
+        // not submerged
+        if (min.p_now.y > 0) return;
+
+        float waterDensity = 1f;
+        float massMadeOfWater = volume * waterDensity;
+
+        float particleHeightDiff =  max.p_now.y - min.p_now.y;
+
+        float submergedQuantity = min.p_now.y / particleHeightDiff;
+
+        float buoyancyForce = submergedPart * massMadeOfWater * g;
+
+    }
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start(){
         length = (pA.transform.position - pB.transform.position).magnitude;
+        physicsEngine = GameObject.Find("PhysicsEngine").GetComponent<PhysicsEngine>();
+
+        volume = 3.14f * thickness*thickness * length;
     }
 
     private void Update(){
