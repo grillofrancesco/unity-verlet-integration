@@ -13,9 +13,7 @@ public class UiHandler : MonoBehaviour
 
             if (Physics.Raycast(ray, out RaycastHit hit)){
                 // set ui text
-                Particle p = hit.collider.GetComponent<Particle>();
-
-                selectedObjText.SetText("Selected: " + hit.collider.name + ", Position: " + p.p_now + ".");
+                selectedObjText.SetText("Selected: " + hit.collider.name + ", Position: " + hit.collider.transform.position + ".");
             }
         }        
     }

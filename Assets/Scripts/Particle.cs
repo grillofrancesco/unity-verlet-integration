@@ -15,7 +15,7 @@ public class Particle : MonoBehaviour
     public float mass = 0.2f;
 
 
-    public Vector3 force;  // cleaned every frame
+    private Vector3 force;  // cleaned every frame
 
     float impulseIntensity;
 
@@ -73,6 +73,7 @@ public class Particle : MonoBehaviour
     // Update is called once per RENDERING frame
     void Update(){
         if (Input.GetKeyDown(KeyCode.Space)) Impulse(new Vector3(0,1,0));
+        if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.Space)) Impulse (new Vector3 (0,-1,0));
         if (Input.GetKeyDown(KeyCode.UpArrow)) Impulse(new Vector3(0,0,1));
         if (Input.GetKeyDown(KeyCode.DownArrow)) Impulse(new Vector3(0,0,-1));
         if (Input.GetKeyDown(KeyCode.LeftArrow)) Impulse(new Vector3(-1,0,0));

@@ -3,13 +3,19 @@ using UnityEngine;
 public class Stick : MonoBehaviour
 {
     PhysicsEngine physicsEngine;
-    public float length;
+
+    float length;
     public Particle pA, pB;
 
-    public float density = 7.87f;
+    public float density = 0.02f;
 
     public float thickness = 0.4f;
     float volume;
+
+    public float mass{
+        get { return volume * density; }
+        private set{}
+    }
 
     public void enforceConstraints(){
         equidistanceConstraint();
@@ -36,8 +42,8 @@ public class Stick : MonoBehaviour
     }
 
     private void buoyancyConstraint(){
-        Particle min = (pA.p_now.y < pb.p_now.y) ? pA : pB;
-        Particle max = (pA.p_now.y < pb.p_now.y) ? pB : pA;
+        Particle min = (pA.p_now.y < pB.p_now.y) ? pA : pB;
+        Particle max = (pA.p_now.y < pB.p_now.y) ? pB : pA;
 
         // not submerged
         if (min.p_now.y > 0) return;
@@ -45,12 +51,25 @@ public class Stick : MonoBehaviour
         float waterDensity = 1f;
         float massMadeOfWater = volume * waterDensity;
 
-        float particleHeightDiff =  max.p_now.y - min.p_now.y;
+        float particleHeightDiff =  Mathf.Abs(max.p_now.y - min.p_now.y);
 
-        float submergedQuantity = min.p_now.y / particleHeightDiff;
+        float submergedSection = (particleHeightDiff < 0.1f) ? 0.8f : -min.p_now.y / particleHeightDiff;
+        submergedSection = Mathf.Clamp01(submergedSection);
 
-        float buoyancyForce = submergedPart * massMadeOfWater * g;
+        Vector3 buoyancyForce = submergedSection * massMadeOfWater * -physicsEngine.G;
 
+        if (max.p_now.y < 0){
+            addForce(buoyancyForce * 2);
+            return;
+        }
+
+        min.addForce(submergedSection * buoyancyForce);
+        max.addForce((1f - submergedSection) * buoyancyForce);
+    }
+
+    public void addForce(Vector3 force){
+        pA.addForce (force * 0.5f);
+        pB.addForce (force * 0.5f);
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created

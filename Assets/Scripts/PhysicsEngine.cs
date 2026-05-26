@@ -29,12 +29,12 @@ public class PhysicsEngine : MonoBehaviour
     void FixedUpdate(){
         foreach(Particle p in particles){ p.fromUnity(); }
 
-        // add forces
+        // add gravity
         foreach(Particle p in particles){ p.addForce(G * p.mass); }
+        // foreach(Stick s in sticks){ s.addForce(G * s.mass); }
         
         foreach(Spring s in springs){ s.addForces(); }
 
-        // EXERCISE: Add Impulses (with buttons maybe)
 
         foreach(Particle p in particles){ p.dynamicStep(Time.fixedDeltaTime); }
 
