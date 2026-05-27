@@ -9,7 +9,8 @@ public class Spring : MonoBehaviour
     public float thickness = 0.2f;
 
     void Start(){
-        restLength = (pA.p_now - pB.p_now).magnitude;
+        restLength = (pA.transform.position - pB.transform.position).magnitude;
+        Debug.Log(restLength);
     }
 
     public void addForces(){
@@ -31,6 +32,5 @@ public class Spring : MonoBehaviour
         transform.localScale = new Vector3 (thickness, vectDiff.magnitude / 2, thickness);
 
         transform.rotation = Quaternion.FromToRotation(Vector3.up, vectDiff.normalized);
-        
     }
 }

@@ -7,7 +7,7 @@ public class Stick : MonoBehaviour
     float length;
     public Particle pA, pB;
 
-    public float density = 0.02f;
+    public float density = 0.2f;
 
     public float thickness = 0.4f;
     float volume;
@@ -56,10 +56,11 @@ public class Stick : MonoBehaviour
         float submergedSection = (particleHeightDiff < 0.1f) ? 0.8f : -min.p_now.y / particleHeightDiff;
         submergedSection = Mathf.Clamp01(submergedSection);
 
-        Vector3 buoyancyForce = submergedSection * massMadeOfWater * -physicsEngine.G;
+        Vector3 buoyancyForce = submergedSection * (massMadeOfWater + min.mass) * -physicsEngine.G;
 
         if (max.p_now.y < 0){
-            addForce(buoyancyForce * 2);
+            buoyancyForce += max.mass * -physicsEngine.G;
+            addForce(buoyancyForce);
             return;
         }
 

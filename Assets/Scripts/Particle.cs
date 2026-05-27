@@ -18,6 +18,7 @@ public class Particle : MonoBehaviour
     private Vector3 force;  // cleaned every frame
 
     float impulseIntensity;
+    Vector3 direction;
 
     PhysicsEngine physicsEngine;
     Vector3 boundary;
@@ -68,16 +69,28 @@ public class Particle : MonoBehaviour
         yLimit = boundary.y;
 
         impulseIntensity = physicsEngine.impulseIntensity;
+        direction = Vector3.zero;
     }
 
     // Update is called once per RENDERING frame
     void Update(){
-        if (Input.GetKeyDown(KeyCode.Space)) Impulse(new Vector3(0,1,0));
-        if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.Space)) Impulse (new Vector3 (0,-1,0));
-        if (Input.GetKeyDown(KeyCode.UpArrow)) Impulse(new Vector3(0,0,1));
-        if (Input.GetKeyDown(KeyCode.DownArrow)) Impulse(new Vector3(0,0,-1));
-        if (Input.GetKeyDown(KeyCode.LeftArrow)) Impulse(new Vector3(-1,0,0));
-        if (Input.GetKeyDown(KeyCode.RightArrow)) Impulse(new Vector3(1,0,0));
+
+        bool shift = Input.GetKey(KeyCode.LeftShift);
+        
+        if (Input.GetKeyDown(KeyCode.Space)) 
+            direction = (!shift) ? new Vector3(0,1,0) : new Vector3 (0,-1,0);
+        else if (Input.GetKeyDown(KeyCode.UpArrow)) direction = new Vector3(0,0,1);
+        
+        else if (Input.GetKeyDown(KeyCode.DownArrow)) direction = new Vector3(0,0,-1);
+        
+        else if (Input.GetKeyDown(KeyCode.LeftArrow)) direction = new Vector3(-1,0,0);
+        
+        else if (Input.GetKeyDown(KeyCode.RightArrow)) direction = new Vector3(1,0,0);
+
+        else if (direction != Vector3.zero){
+            Impulse(direction);
+            direction = Vector3.zero;
+        }
     }
 
     // both from and to unity just transport pos info from our verlet rewriting to unity variables

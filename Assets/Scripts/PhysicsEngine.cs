@@ -31,7 +31,7 @@ public class PhysicsEngine : MonoBehaviour
 
         // add gravity
         foreach(Particle p in particles){ p.addForce(G * p.mass); }
-        // foreach(Stick s in sticks){ s.addForce(G * s.mass); }
+        foreach(Stick s in sticks){ s.addForce(G * s.mass); }
         
         foreach(Spring s in springs){ s.addForces(); }
 
